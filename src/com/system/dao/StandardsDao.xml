@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.system.dao.StandardsDao">
+<select id="getStandardsList" resultType="Map">
+	select * from standards t where t.is_delete = '0' order by t.type, seq asc
+</select>
+<select id="getStdListByType" parameterType="String" resultType="Map">
+	select * from standards t where t.is_delete = '0' and t.type = #{_parameter} order by seq asc
+</select>
+<select id="queryPageCount" parameterType="Map" resultType="int">
+	select count(1) from standards
+	<where>
+		<if test="standardsType != null and standardsType != ''">
+			and type like '%${standardsType}%'
+		</if>
+		<if test="is_delete != null and is_delete != ''">
+			and is_delete=#{is_delete}
+		</if>
+		and type=#{type}
+	</where>
+</select>
+<select id="queryPage" parameterType="Map" resultType="Map">
+	select * from standards
+	<where>
+		<if test="standardsType != null and standardsType != ''">
+			and type like '%${standardsType}%'
+		</if>
+		<if test="is_delete != null and is_delete != ''">
+			and is_delete=#{is_delete}
+		</if>
+		and type=#{type}
+	</where>
+	<if test="sidx == null or sidx == ''">
+		order by type, seq asc
+	</if>
+	<if test="sidx != null and sidx != ''">
+		order by ${sidx} ${sord}
+	</if>	
+</select>
+<insert id="insert" parameterType="Map">
+	insert into standards(
+		<trim prefix=""  suffixOverrides=",">
+			id,
+			<if test="TYPE != NULL">type,</if>
+			<if test="VALUE != NULL">value,</if>
+			<if test="TEXT != NULL">text,</if>
+			<if test="SEQ != NULL">seq,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			seq_standards_id.nextval,
+			<if test="TYPE != NULL">#{TYPE},</if>
+			<if test="VALUE != NULL">#{VALUE},</if>
+			<if test="TEXT != NULL">#{TEXT},</if>
+			<if test="SEQ != NULL">#{SEQ},</if>
+        </trim>
+	<![CDATA[ ) ]]>     
+</insert>
+<update id="update" parameterType="Map">
+	update standards
+	<set>
+		<if test="TYPE != NULL">type=#{TYPE},</if>
+		<if test="VALUE != NULL">value=#{VALUE},</if>
+		<if test="TEXT != NULL">text=#{TEXT},</if>
+		<if test="SEQ != NULL">seq=#{SEQ},</if>
+	</set>
+	where id=#{ID}
+</update>
+<select id="getStandardById" parameterType="String" resultType="Map">
+		select * from standards where id = #{standardId}
+</select>
+<update id="cancelStandard" parameterType="String">
+	update standards set is_delete=1 where id=#{standardId}
+</update>
+<update id="useStandard" parameterType="String">
+	update standards set is_delete=0 where id=#{standardId}
+</update>
+<delete id="deleteStandard" parameterType="String">
+	delete from standards where id = #{standardId}
+</delete>
+
+<select id="getDwdmList" resultType="Map">
+	select t.dwmc text, t.id value from jgdwb t
+</select>
+
+<delete id="deleteStandardByType" parameterType="String">
+	delete from standards where type = #{standardType}
+</delete>
+<select id="getZwzjdmList" resultType="Map">
+	select t.zw value, t.xzzj text from zwzjb t
+</select>
+</mapper>

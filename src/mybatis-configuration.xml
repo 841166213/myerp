@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+    	      <property name="dialect" value="oracle"/>
+	</properties>
+	
+	<typeAliases>
+	  	<typeAlias type="java.lang.String" alias="String" /> 
+	  	<typeAlias type="java.lang.Integer" alias="Integer" /> 
+	  	<typeAlias type="java.util.HashMap" alias="Map" /> 
+  	</typeAliases>
+	    
+ 	<plugins>
+	        <plugin interceptor="com.common.mybatis.page.PaginationInterceptor"/>
+	</plugins>
+</configuration>

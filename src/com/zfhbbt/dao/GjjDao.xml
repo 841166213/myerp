@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.zfhbbt.dao.GjjDao">
+<select id="queryZhbgPageCount" parameterType="Map" resultType="int">
+	select count(1) from gjj_dwzhbgb t
+	left join jgdwb j on j.id=t.DWID
+	<where>
+		<if test="dwmc != null and dwmc != ''">
+			and j.dwmc like '%${dwmc}%'
+		</if>
+		<if test="zzjgdm != null and zzjgdm != ''">
+			and j.zzjgdm like '%${zzjgdm}%'
+		</if>
+	</where>
+</select>
+<select id="queryZhbgPage" parameterType="Map" resultType="Map">
+	select t.*,j.dwmc,j.zzjgdm,j.ssqx,j.yzbm,j.dwszdz from gjj_dwzhbgb t
+	left join jgdwb j on j.id=t.DWID
+	<where>
+		<if test="dwmc != null and dwmc != ''">
+			and j.dwmc like '%${dwmc}%'
+		</if>
+		<if test="zzjgdm != null and zzjgdm != ''">
+			and j.zzjgdm like '%${zzjgdm}%'
+		</if>
+	</where>
+	<if test="sidx == null or sidx == ''">
+		order by t.sbsj desc
+	</if>
+	<if test="sidx != null and sidx != ''">
+		order by ${sidx} ${sord}
+	</if>	
+</select>
+<insert id="insertDwzhbgb" parameterType="Map">
+	insert into gjj_dwzhbgb(
+		<trim prefix=""  suffixOverrides=",">
+			id, sbsj,
+			<if test="DWID != NULL">DWID,</if>
+			<if test="JBBM != NULL">JBBM,</if>
+			<if test="JBR != NULL">JBR,</if>
+			<if test="JBR_LXDH != NULL">JBR_LXDH,</if>
+			<if test="BGYY != NULL">BGYY,</if>
+			<if test="BGYY_QT != NULL">BGYY_QT,</if>
+			<if test="BGQ_DWXZ != NULL">BGQ_DWXZ,</if>
+			<if test="BGQ_ZHMC != NULL">BGQ_ZHMC,</if>
+			<if test="BGQ_KHYH != NULL">BGQ_KHYH,</if>
+			<if test="BGQ_YHZH != NULL">BGQ_YHZH,</if>
+			<if test="DWXZ != NULL">DWXZ,</if>
+			<if test="ZHMC != NULL">ZHMC,</if>
+			<if test="KHYH != NULL">KHYH,</if>
+			<if test="YHZH != NULL">YHZH,</if>
+			<if test="BCSM != NULL">BCSM,</if>
+			<if test="suserId != NULL">GLZXJBR,</if>
+			<if test="GLZXJBR_LXDH != NULL">GLZXJBR_LXDH,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			seq_dwzhxxb_id.nextval, sysdate,
+			<if test="DWID != NULL">#{DWID},</if>
+			<if test="JBBM != NULL">#{JBBM},</if>
+			<if test="JBR != NULL">#{JBR},</if>
+			<if test="JBR_LXDH != NULL">#{JBR_LXDH},</if>
+			<if test="BGYY != NULL">#{BGYY},</if>
+			<if test="BGYY_QT != NULL">#{BGYY_QT},</if>
+			<if test="BGQ_DWXZ != NULL">#{BGQ_DWXZ},</if>
+			<if test="BGQ_ZHMC != NULL">#{BGQ_ZHMC},</if>
+			<if test="BGQ_KHYH != NULL">#{BGQ_KHYH},</if>
+			<if test="BGQ_YHZH != NULL">#{BGQ_YHZH},</if>
+			<if test="DWXZ != NULL">#{DWXZ},</if>
+			<if test="ZHMC != NULL">#{ZHMC},</if>
+			<if test="KHYH != NULL">#{KHYH},</if>
+			<if test="YHZH != NULL">#{YHZH},</if>
+			<if test="BCSM != NULL">#{BCSM},</if>
+			<if test="suserId != NULL">#{suserId},</if>
+			<if test="GLZXJBR_LXDH != NULL">#{GLZXJBR_LXDH},</if>
+        </trim>
+	<![CDATA[ ) ]]>     
+</insert>
+<update id="updateDwzhbgb" parameterType="Map">
+	update gjj_dwzhbgb
+	<set>
+		<if test="DWID != NULL">DWID=#{DWID},</if>
+		<if test="JBBM != NULL">JBBM=#{JBBM},</if>
+		<if test="JBR != NULL">JBR=#{JBR},</if>
+		<if test="JBR_LXDH != NULL">JBR_LXDH=#{JBR_LXDH},</if>
+		<if test="BGYY != NULL">BGYY=#{BGYY},</if>
+		<if test="BGYY_QT != NULL">BGYY_QT=#{BGYY_QT},</if>
+		<if test="BGQ_DWXZ != NULL">BGQ_DWXZ=#{BGQ_DWXZ},</if>
+		<if test="BGQ_ZHMC != NULL">BGQ_ZHMC=#{BGQ_ZHMC},</if>
+		<if test="BGQ_KHYH != NULL">BGQ_KHYH=#{BGQ_KHYH},</if>
+		<if test="BGQ_YHZH != NULL">BGQ_YHZH=#{BGQ_YHZH},</if>
+		<if test="DWXZ != NULL">DWXZ=#{DWXZ},</if>
+		<if test="ZHMC != NULL">ZHMC=#{ZHMC},</if>
+		<if test="KHYH != NULL">KHYH=#{KHYH},</if>
+		<if test="YHZH != NULL">YHZH=#{YHZH},</if>
+		<if test="BCSM != NULL">BCSM=#{BCSM},</if>
+		<if test="suserId != NULL">GLZXJBR=#{suserId},</if>
+		<if test="GLZXJBR_LXDH != NULL">GLZXJBR_LXDH=#{GLZXJBR_LXDH},</if>
+		<if test="ZT != NULL">ZT=#{ZT},</if>
+	</set>
+	where ID=#{ID}
+</update>
+<delete id="deleteDwzhbgb" parameterType="String">
+	delete gjj_dwzhbgb where id = #{zhbgId}
+</delete>
+<select id="getZhbgById" parameterType="String" resultType="Map">
+	select t.*,j.zzjgdm,j.ssqx,j.yzbm,j.dwszdz,u.account from gjj_dwzhbgb t
+  	left join jgdwb j on t.DWID=j.id
+  	left join userb u on t.glzxjbr=u.id where t.id = #{zhbgId}
+</select>
+<select id="getZhxxByDwid" parameterType="String" resultType="Map">
+	select zzjgdm,ssqx,yzbm,dwszdz,dwxz bgq_dwxz,zhmc bgq_zhmc,khyh bgq_khyh,yhzh bgq_yhzh from jgdwb j
+	  	where id = #{dwid}
+</select>
+<select id="queryDwhcPage" parameterType="Map" resultType="Map">
+	select t.*, d.*,  q.bnd_hj_rs, q.bnd_hj_je
+	  from sb_dwsbxxb t
+	  join czj_zjhbpcb p
+	    on t.zjhbpc_id = p.id
+	  left join gjj_dwdjb d
+	    on t.id = d.dwsbid
+	  left join sb_dwsbqkb q
+	    on t.id = q.dwsbid
+	 where p.hbzt = '1'
+	 <if test="SBDW != null and SBDW != ''">
+		and t.DWID = #{SBDW} 
+	</if>
+	<if test="SBND != null and SBND != ''">
+		and t.SBND = #{SBND} 
+	</if>
+	<if test="DJZT != null and DJZT != ''">
+		and t.DJZT_GJJ = #{DJZT} 
+	</if>
+	order by to_number(t.DJZT_GJJ) asc
+</select>
+<select id="queryDwhcPageCount" parameterType="Map" resultType="int">
+	select count(1)
+	  from sb_dwsbxxb t
+	  join czj_zjhbpcb p
+	    on t.zjhbpc_id = p.id
+	  left join gjj_dwdjb d
+	    on t.id = d.dwsbid
+	  left join sb_dwsbqkb q
+	    on t.id = q.dwsbid
+	 where p.hbzt = '1'
+	 <if test="SBDW != null and SBDW != ''">
+		and t.DWID = #{SBDW} 
+	</if>
+	<if test="SBND != null and SBND != ''">
+		and t.SBND = #{SBND} 
+	</if>
+	<if test="DJZT != null and DJZT != ''">
+		and t.DJZT_GJJ = #{DJZT} 
+	</if>
+</select>
+<select id="getDwdjById" parameterType="String" resultType="Map">
+	select * from gjj_dwdjb t  where t.DWSBID = #{_parameter}
+</select>
+<select id="getDwxxByDwsbId" parameterType="String" resultType="Map">
+	select t.* from jgdwb t join sb_dwsbxxb s on t.id = s.dwid where s.id =  #{_parameter}
+</select>
+<insert id="insertDwdj" parameterType="Map">
+	insert into GJJ_DWDJB(
+		<trim prefix=""  suffixOverrides=",">
+			DWSBID, 
+			<if test="DWMC != NULL and DWMC != ''">DWMC,</if>
+			<if test="DJRQ != NULL and DJRQ != ''">DJRQ,</if>
+			<if test="DJN != NULL and DJN != ''">DJN,</if>
+			<if test="DWFRDM != NULL and DWFRDM != ''">DWFRDM,</if>
+			<if test="DWSZDZ != NULL and DWSZDZ != ''">DWSZDZ,</if>
+			<if test="YZBM != NULL and YZBM != ''">YZBM,</if>
+			<if test="ZGBM != NULL and ZGBM != ''">ZGBM,</if>
+			<if test="DWXZ != NULL and DWXZ != ''">DWXZ,</if>
+			<if test="KHYH != NULL and KHYH != ''">KHYH,</if>
+			<if test="YHZH != NULL and YHZH != ''">YHZH,</if>
+			<if test="HCZRS != NULL and HCZRS != ''">HCZRS,</if>
+			<if test="HCZJE != NULL and HCZJE != ''">HCZJE,</if>
+			<if test="JBBM != NULL and JBBM != ''">JBBM,</if>
+			<if test="FZR != NULL and FZR != ''">FZR,</if>
+			<if test="FZR_DH != NULL and FZR_DH != ''">FZR_DH,</if>
+			<if test="LXR != NULL and LXR != ''">LXR,</if>
+			<if test="LXR_DH != NULL and LXR_DH != ''">LXR_DH,</if>
+			<if test="ZFBTKHYH != NULL and ZFBTKHYH != ''">ZFBTKHYH,</if>
+			<if test="JBR != NULL and JBR != ''">JBR,</if>
+			<if test="JBR_DH != NULL and JBR_DH != ''">JBR_DH,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			#{DWSBID},
+			<if test="DWMC != NULL and DWMC != ''">#{DWMC},</if>
+			<if test="DJRQ != NULL and DJRQ != ''">to_date(#{DJRQ}, 'yyyy-mm-dd'),</if>
+			<if test="DJN != NULL and DJN != ''">#{DJN},</if>
+			<if test="DWFRDM != NULL and DWFRDM != ''">#{DWFRDM},</if>
+			<if test="DWSZDZ != NULL and DWSZDZ != ''">#{DWSZDZ},</if>
+			<if test="YZBM != NULL and YZBM != ''">#{YZBM},</if>
+			<if test="ZGBM != NULL and ZGBM != ''">#{ZGBM},</if>
+			<if test="DWXZ != NULL and DWXZ != ''">#{DWXZ},</if>
+			<if test="KHYH != NULL and KHYH != ''">#{KHYH},</if>
+			<if test="YHZH != NULL and YHZH != ''">#{YHZH},</if>
+			<if test="HCZRS != NULL and HCZRS != ''">#{HCZRS},</if>
+			<if test="HCZJE != NULL and HCZJE != ''">#{HCZJE},</if>
+			<if test="JBBM != NULL and JBBM != ''">#{JBBM},</if>
+			<if test="FZR != NULL and FZR != ''">#{FZR},</if>
+			<if test="FZR_DH != NULL and FZR_DH != ''">#{FZR_DH},</if>
+			<if test="LXR != NULL and LXR != ''">#{LXR},</if>
+			<if test="LXR_DH != NULL and LXR_DH != ''">#{LXR_DH},</if>
+			<if test="ZFBTKHYH != NULL and ZFBTKHYH != ''">#{ZFBTKHYH},</if>
+			<if test="JBR != NULL and JBR != ''">#{JBR},</if>
+			<if test="JBR_DH != NULL and JBR_DH != ''">#{JBR_DH},</if>
+        </trim>
+	<![CDATA[ ) ]]>     
+</insert>
+<update id="updateDwdj" parameterType="Map">
+	update GJJ_DWDJB
+	<set>
+		<if test="DWMC!=NULL">DWMC=#{DWMC},</if>
+		<if test="DJRQ!=NULL">DJRQ=to_date(#{DJRQ}, 'yyyy-mm-dd'),</if>
+		<if test="DJN!=NULL">DJN=#{DJN},</if>
+		<if test="DWFRDM!=NULL">DWFRDM=#{DWFRDM},</if>
+		<if test="DWSZDZ!=NULL">DWSZDZ=#{DWSZDZ},</if>
+		<if test="YZBM!=NULL">YZBM=#{YZBM},</if>
+		<if test="ZGBM!=NULL">ZGBM=#{ZGBM},</if>
+		<if test="DWXZ!=NULL">DWXZ=#{DWXZ},</if>
+		<if test="KHYH!=NULL">KHYH=#{KHYH},</if>
+		<if test="YHZH!=NULL">YHZH=#{YHZH},</if>
+		<if test="HCZRS!=NULL">HCZRS=#{HCZRS},</if>
+		<if test="HCZJE!=NULL">HCZJE=#{HCZJE},</if>
+		<if test="JBBM!=NULL">JBBM=#{JBBM},</if>
+		<if test="FZR!=NULL">FZR=#{FZR},</if>
+		<if test="FZR_DH!=NULL">FZR_DH=#{FZR_DH},</if>
+		<if test="LXR!=NULL">LXR=#{LXR},</if>
+		<if test="LXR_DH!=NULL">LXR_DH=#{LXR_DH},</if>
+		<if test="ZFBTKHYH!=NULL">ZFBTKHYH=#{ZFBTKHYH},</if>
+		<if test="JBR!=NULL">JBR=#{JBR},</if>
+		<if test="JBR_DH!=NULL">JBR_DH=#{JBR_DH},</if>
+	</set>
+	where DWSBID=#{DWSBID}
+</update>
+<select id="queryZgtqPageCount" parameterType="Map" resultType="int">
+	select count(1) from gjj_zgtqsqb t
+	<where>
+		<if test="xm != null and xm != ''">
+			and xm like '%${xm}%'
+		</if>
+		<if test="sfzhm != null and sfzhm != ''">
+			and sfzhm like '%${sfzhm}%'
+		</if>
+	</where>
+</select>
+<select id="queryZgtqPage" parameterType="Map" resultType="Map">
+	select t.* from gjj_zgtqsqb t
+	<where>
+		<if test="xm != null and xm != ''">
+			and xm like '%${xm}%'
+		</if>
+		<if test="sfzhm != null and sfzhm != ''">
+			and sfzhm like '%${sfzhm}%'
+		</if>
+	</where>
+	<if test="sidx == null or sidx == ''">
+		order by t.dwid desc
+	</if>
+	<if test="sidx != null and sidx != ''">
+		order by ${sidx} ${sord}
+	</if>	
+</select>
+<insert id="insertZgtqsqb" parameterType="Map">
+	insert into gjj_zgtqsqb(
+		<trim prefix=""  suffixOverrides=",">
+			id,
+			<if test="DWID != NULL">DWID,</if>
+			<if test="XM != NULL">XM,</if>
+			<if test="SFZHM != NULL">SFZHM,</if>
+			<if test="KHYH != NULL">KHYH,</if>
+			<if test="BTZH != NULL">BTZH,</if>
+			<if test="ZHYE != NULL">ZHYE,</if>
+			<if test="LXR != NULL">LXR,</if>
+			<if test="LXDH != NULL">LXDH,</if>
+			<if test="SQLY != NULL">SQLY,</if>
+			<if test="SQLY_QT != NULL">SQLY_QT,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			seq_gjj_zgtqsqb_id.nextval,
+			<if test="DWID != NULL">#{DWID},</if>
+			<if test="XM != NULL">#{XM},</if>
+			<if test="SFZHM != NULL">#{SFZHM},</if>
+			<if test="KHYH != NULL">#{KHYH},</if>
+			<if test="BTZH != NULL">#{BTZH},</if>
+			<if test="ZHYE != NULL">#{ZHYE},</if>
+			<if test="LXR != NULL">#{LXR},</if>
+			<if test="LXDH != NULL">#{LXDH},</if>
+			<if test="SQLY != NULL">#{SQLY},</if>
+			<if test="SQLY_QT != NULL">#{SQLY_QT},</if>
+        </trim>
+	<![CDATA[ ) ]]>     
+</insert>
+<update id="updateZgtqsqb" parameterType="Map">
+	update gjj_zgtqsqb
+	<set>
+		<if test="DWID != NULL">DWID=#{DWID},</if>
+		<if test="XM != NULL">XM=#{XM},</if>
+		<if test="SFZHM != NULL">SFZHM=#{SFZHM},</if>
+		<if test="KHYH != NULL">KHYH=#{KHYH},</if>
+		<if test="BTZH != NULL">BTZH=#{BTZH},</if>
+		<if test="ZHYE != NULL">ZHYE=#{ZHYE},</if>
+		<if test="LXR != NULL">LXR=#{LXR},</if>
+		<if test="LXDH != NULL">LXDH=#{LXDH},</if>
+		<if test="SQLY != NULL">SQLY=#{SQLY},</if>
+		<if test="SQLY_QT != NULL">SQLY_QT=#{SQLY_QT},</if>
+		<if test="ZT != NULL">ZT=#{ZT},</if>
+	</set>
+	where ID=#{ID}
+</update>
+<select id="getZgtqById" parameterType="String" resultType="Map">
+	select * from gjj_zgtqsqb t where id = #{zgtqId}
+</select>
+<delete id="deleteZgtqsqb" parameterType="String">
+	delete gjj_zgtqsqb where id = #{zgtqId}
+</delete>
+<update id="dwdjSubmit" parameterType="String">
+	update sb_dwsbxxb t set t.DJZT_GJJ = '1', t.DJSJ_GJJ = sysdate where t.id = #{id}
+</update>
+</mapper>

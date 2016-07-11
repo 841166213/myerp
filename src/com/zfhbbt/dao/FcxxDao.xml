@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.zfhbbt.dao.FcxxDao">
+<select id="fccxPpQuery" parameterType="Map" resultType="Map">
+	select * from (
+		select t.*, utl_match.edit_distance_similarity(#{SFZ}, t.sfz) xsd, utl_match.edit_distance_similarity(#{SFZ}, t.posfz) poxsd from fcxxb t 
+		where t.xm = #{XM} or t.sfz = #{SFZ} or t.poxm = #{XM} or t.posfz = #{SFZ}
+		<if test="SFZ_6 != null and SFZ_6 != ''">
+				or t.sfz like '%${SFZ_6}%'
+				or t.posfz like '%${SFZ_6}%'
+				or utl_match.edit_distance_similarity(#{SFZ}, t.sfz) > 80
+				or utl_match.edit_distance_similarity(#{SFZ}, t.posfz) > 80
+		</if>
+		)
+	order by (case when xsd > poxsd then xsd else poxsd end) desc
+</select>
+<select id="fccxQueryPage" parameterType="Map" resultType="Map">
+	select t.* from fcxxb t
+	<where>
+		<if test="XM != null and XM != ''">
+			and (t.xm like '%${XM}%' or t.poxm like '%${XM}%')
+		</if>
+		<if test="SFZ != null and SFZ != ''">
+			and (t.sfz like '%${SFZ}%' or t.posfz like '%${SFZ}%')
+		</if>
+		<if test="DZ != null and DZ != ''">
+			and t.dz like '%${DZ}%'
+		</if>
+		<if test="DW != null and DW != ''">
+			and t.dw like '%${DW}%'
+		</if>
+	</where>
+</select>
+<select id="fccxQueryPageCount" parameterType="Map" resultType="int">
+	select count(1) from fcxxb t
+	<where>
+		<if test="XM != null and XM != ''">
+			and (t.xm like '%${XM}%' or t.poxm like '%${XM}%')
+		</if>
+		<if test="SFZ != null and SFZ != ''">
+			and (t.sfz like '%${SFZ}%' or t.posfz like '%${SFZ}%')
+		</if>
+		<if test="DZ != null and DZ != ''">
+			and t.dz like '%${DZ}%'
+		</if>
+		<if test="DW != null and DW != ''">
+			and t.dw like '%${DW}%'
+		</if>
+	</where>
+</select>
+<insert id="insert" parameterType="Map">
+	insert into fcxxb(
+		<trim prefix=""  suffixOverrides=",">
+			id,
+			<if test="DW != NULL and DW != ''">DW,</if>
+			<if test="DZ != NULL and DZ != ''">DZ,</if>
+			<if test="XM != NULL and XM != ''">XM,</if>
+			<if test="SFZ != NULL and SFZ != ''">SFZ,</if>
+			<if test="POXM != NULL and POXM != ''">POXM,</if>
+			<if test="POSFZ != NULL and POSFZ != ''">POSFZ,</if>
+			<if test="MJ != NULL and MJ != ''">MJ,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			seq_fcxxb_id.nextval,
+			<if test="DW != NULL and DW != ''">#{DW},</if>
+			<if test="DZ != NULL and DZ != ''">#{DZ},</if>
+			<if test="XM != NULL and XM != ''">#{XM},</if>
+			<if test="SFZ != NULL and SFZ != ''">#{SFZ},</if>
+			<if test="POXM != NULL and POXM != ''">#{POXM},</if>
+			<if test="POSFZ != NULL and POSFZ != ''">#{POSFZ},</if>
+			<if test="MJ != NULL and MJ != ''">#{MJ},</if>
+        </trim>
+	<![CDATA[ ) ]]>     
+</insert>
+<update id="update" parameterType="Map">
+	update fcxxb
+	<set>
+		<if test="DW != NULL">DW=#{DW},</if>
+		<if test="DZ != NULL">DZ=#{DZ},</if>
+		<if test="XM != NULL">XM=#{XM},</if>
+		<if test="SFZ != NULL">SFZ=#{SFZ},</if>
+		<if test="POXM != NULL">POXM=#{POXM},</if>
+		<if test="POSFZ != NULL">POSFZ=#{POSFZ},</if>
+		<if test="MJ != NULL">MJ=#{MJ},</if>
+	</set>
+	where id=#{ID}
+</update>
+<select id="getFcxxById" parameterType="String" resultType="Map">
+	select * from fcxxb where id = #{fcxxId}
+</select>
+<delete id="deleteFcxx" parameterType="String">
+	delete from fcxxb where id = #{fcxxId}
+</delete>
+</mapper>

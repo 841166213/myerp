@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.system.dao.MenuDao">
+	<select id="getFirstLevelMenu" resultType="com.system.model.Menu">
+		SELECT * from menu t where t.parentId is NULL ORDER BY t.seq
+	</select>
+	<select id="queryFirstLevelPage" resultType="Map" parameterType="Map">
+		SELECT * from menu t where t.parentId is NULL 
+		<if test="menuName != null and menuName != ''">
+			and t.menuName like '%${menuName}%'
+		</if>
+		<if test="menuId != null and menuId != ''">
+			and t.menuId like '%${menuId}%'
+		</if>
+		ORDER BY t.seq
+	</select>
+	<select id="queryFirstLevelPageCount" resultType="int" parameterType="Map">
+		SELECT count(1) from menu t where t.parentId is NULL 
+		<if test="menuName != null and menuName != ''">
+			and t.menuName like '%${menuName}%'
+		</if>
+		<if test="menuId != null and menuId != ''">
+			and t.menuId like '%${menuId}%'
+		</if>
+		ORDER BY t.seq
+	</select>
+	<select id="querySecondLevelPage" resultType="Map" parameterType="Map">
+		SELECT
+			m.*
+		FROM
+			menu m
+		WHERE
+			m.parentId IS NOT NULL
+		<if test="menuName != null and menuName != ''">
+			and m.menuName like '%${menuName}%'
+		</if>
+		<if test="menuId != null and menuId != ''">
+			and m.menuId like '%${menuId}%'
+		</if>
+		<if test="parentId != null and parentId != ''">
+			and m.parentId = #{parentId}
+		</if>
+		ORDER BY m.seq
+	</select>
+	<select id="querySecondLevelPageCount" resultType="int" parameterType="Map">
+		SELECT
+			count(1)
+		FROM
+			menu m
+		WHERE
+			m.parentId IS NOT NULL
+		<if test="menuName != null and menuName != ''">
+			and m.menuName like '%${menuName}%'
+		</if>
+		<if test="menuId != null and menuId != ''">
+			and m.menuId like '%${menuId}%'
+		</if>
+		<if test="parentId != null and parentId != ''">
+			and m.parentId = #{parentId}
+		</if>
+	</select>
+	<select id="getMenuByFatherId" resultType="Map" parameterType="String">
+		SELECT * from menu t where t.parentId  = #{id} ORDER BY t.seq
+	</select>
+	<update id="update" parameterType="Map">
+		 update menu
+	      <set>  
+	        <if test="MENUID != NULL">MENUID = #{MENUID},</if>
+			<if test="MENUNAME != NULL">MENUNAME = #{MENUNAME},</if>
+			<if test="TYPE != NULL">TYPE = #{TYPE},</if>
+			<if test="PARENTID != NULL">PARENTID = #{PARENTID},</if>
+			<if test="SEQ != NULL">SEQ = #{SEQ},</if>
+			<if test="URL != NULL">URL = #{URL},</if>
+			<if test="CLASS != NULL">CLASS = #{CLASS},</if>
+			<if test="IS_DEFAULT != NULL">IS_DEFAULT = #{IS_DEFAULT},</if>
+		  </set>
+		   WHERE ID = #{ID}     
+	</update>
+	
+	<insert id="insert" parameterType="Map">
+		 insert into menu(
+	      <trim prefix=""  suffixOverrides=",">
+				ID,
+				<if test="MENUID != null">MENUID,</if>
+				<if test="MENUNAME != null">MENUNAME,</if>
+				<if test="TYPE != null">TYPE,</if>
+				<if test="PARENTID != null">PARENTID,</if>
+				<if test="SEQ != null">SEQ,</if>
+				<if test="URL != null">URL,</if>
+				<if test="CLASS != null">CLASS,</if>
+           </trim>
+	    <![CDATA[ ) values( ]]> 
+	       <trim prefix=""  suffixOverrides=",">
+				seq_menu_id.nextval,
+				<if test="MENUID != null">#{MENUID},</if>
+				<if test="MENUNAME != null">#{MENUNAME},</if>
+				<if test="TYPE != null">#{TYPE},</if>
+				<if test="PARENTID != null">#{PARENTID},</if>
+				<if test="SEQ != null">#{SEQ},</if>
+				<if test="URL != null">#{URL},</if>
+				<if test="CLASS != null">#{CLASS},</if>
+            </trim>
+	    <![CDATA[ ) ]]>     
+	</insert>
+	<delete id="delete" parameterType="String">
+		delete from menu where id = #{id}
+	</delete>
+	<select id="queryPageCount" parameterType="Map" resultType="int">
+		select count(1) from menu
+		<where>
+			<if test="menuName != null and menuName != ''">
+				and menuname like '%${menuName}%'
+			</if>
+			<if test="menuType != null and menuType != ''">
+				and type=#{menuType}
+			</if>
+			<if test="is_default != null and is_default != ''">
+				and is_default=#{is_default}
+			</if>
+		</where>
+	</select>
+	<select id="queryPage" parameterType="Map" resultType="Map">
+		select t.*, s.menuname parentname from menu t		
+		left join menu s on s.id=t.parentid
+		<where>
+			<if test="menuName != null and menuName != ''">
+				and t.menuname like '%${menuName}%'
+			</if>
+			<if test="menuType != null and menuType != ''">
+				and t.type=#{menuType}
+			</if>
+			<if test="is_default != null and is_default != ''">
+				and t.is_default=#{is_default}
+			</if>			
+		</where>
+		<if test="sidx == null or sidx == ''">
+			order by t.parentid, t.seq asc
+		</if>
+		<if test="sidx != null and sidx != ''">
+			<if test="sidx=='PARENTNAME'">
+				order by t.parentid ${sord}
+			</if>
+			<if test="sidx != 'PARENTNAME'">
+				order by t.${sidx} ${sord}
+			</if>
+		</if>			
+	</select>
+	<select id="getMenuById" parameterType="String" resultType="Map">
+		select * from menu where id = #{menuId}
+	</select>
+	<select id="getAllMenu" resultType="Map">
+		select * from menu
+	</select>
+	<select id="getLevelMenu" parameterType="String" resultType="Map">
+		select * from menu where type = #{level} order by PARENTID, SEQ asc
+	</select>
+	<select id="getMenuByUserId" parameterType="String" resultType="com.system.model.Menu">
+		select distinct t.* from menu t join 
+		role_menu rm on t.id=rm.menuid join
+		user_role ur on rm.roleid=ur.role_id where ur.user_id=#{roleId}
+		order by t.type, t.seq asc
+	</select>
+</mapper>

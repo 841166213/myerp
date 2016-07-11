@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.zfhbbt.dao.GdDao">
+<insert id="sbxxGdByDwsbId" parameterType="String">
+insert into gd_rygdxxb
+  (ID,
+   DWSBID,
+   SBLX,
+   XM,
+   SFZHM,
+   CJGZSJ,
+   JRJGSYDWGZSJ,
+   ZW,
+   JZQK,
+   XJZFWDZ,
+   KSLQSJ,
+   YLQNS,
+   SNDYFFBZ,
+   BNDYFFBZ,
+   LQFS,
+   FFEHJ,
+   POXM,
+   POSFZHM,
+   FGMJ,
+   CEHBBTZE,
+   FWSZDZ,
+   XZZJ,
+   SQLY,
+   ZZZT,
+   GDSJ,
+   SFLW,
+   ZXBZ)
+  (select ID,
+          DWSBID,
+          SBLX,
+          XM,
+          SFZHM,
+          CJGZSJ,
+          JRJGSYDWGZSJ,
+          ZW,
+          JZQK,
+          XJZFWDZ,
+          KSLQSJ,
+          YLQNS,
+          SNDYFFBZ,
+          BNDYFFBZ,
+          LQFS,
+          FFEHJ,
+          POXM,
+          POSFZHM,
+          FGMJ,
+          CEHBBTZE,
+          FWSZDZ,
+          XZZJ,
+          SQLY,
+          ZZZT,
+          sysdate,
+          (case when r.lqfs = '2' or r.YLQNS = 14 then '1' else '0' end),
+          '1'
+     from sb_rysbxxb r where r.DWSBID = #{_parameter} and r.SHZT_SBXX = '1')
+</insert>
+<update id="resetRygdxxZxbzByDwsbId" parameterType="String">
+	update gd_rygdxxb t
+	   set t.zxbz = '0'
+	 where exists (select 1
+	          from sb_rysbxxb r
+	         where r.DWSBID = #{_parameter}
+	           and r.SHZT_SBXX = '1'
+	           and r.sfzhm = t.sfzhm)
+	<![CDATA[   and t.dwsbid <> #{_parameter} ]]>
+</update>
+<select id="getLastRygdxx" parameterType="Map" resultType="Map">
+	select t.*, d.dwid, d.sbnd from gd_rygdxxb t join sb_dwsbxxb d on t.dwsbid = d.id where t.sfzhm = #{SFZHM} and t.zxbz = '1'
+</select>
+</mapper>

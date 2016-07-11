@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.zfhbbt.dao.JgdwDao">
+<select id="queryPageCount" parameterType="Map" resultType="int">
+	select count(1) from jgdwb
+	<where>
+		<if test="dwmc != null and dwmc != ''">
+			and dwmc like '%${dwmc}%'
+		</if>
+		<if test="zzjgdm != null and zzjgdm != ''">
+			and zzjgdm like '%${zzjgdm}%'
+		</if>
+	</where>
+</select>
+<select id="queryPage" parameterType="Map" resultType="Map">
+	select * from jgdwb
+	<where>
+		<if test="dwmc != null and dwmc != ''">
+			and dwmc like '%${dwmc}%'
+		</if>
+		<if test="zzjgdm != null and zzjgdm != ''">
+			and zzjgdm like '%${zzjgdm}%'
+		</if>
+	</where>
+	<if test="sidx == null or sidx == ''">
+		order by zzjgdm asc
+	</if>
+	<if test="sidx != null and sidx != ''">
+		order by ${sidx} ${sord}
+	</if>	
+</select>
+<insert id="insert" parameterType="Map">
+	insert into jgdwb(
+		<trim prefix=""  suffixOverrides=",">
+			id,
+			<if test="DWMC != NULL and DWMC != ''">dwmc,</if>
+			<if test="ZZJGDM != NULL and ZZJGDM != ''">zzjgdm,</if>
+			<if test="DWXZ != NULL and DWXZ != ''">dwxz,</if>
+			<if test="DWJFLY != NULL and DWJFLY != ''">dwjfly,</if>
+			<if test="DWFRDM != NULL and DWFRDM != ''">dwfrdm,</if>
+			<if test="SSQX != NULL and SSQX != ''">ssqx,</if>
+			<if test="DWSZDZ != NULL and DWSZDZ != ''">dwszdz,</if>
+			<if test="YZBM != NULL and YZBM != ''">yzbm,</if>
+			<if test="ZGBM != NULL and ZGBM != ''">zgbm,</if>
+			<if test="BZRS != NULL and BZRS != ''">bzrs,</if>
+			<if test="ZHMC != NULL and ZHMC != ''">ZHMC,</if>
+			<if test="KHYH != NULL and KHYH != ''">KHYH,</if>
+			<if test="YHZH != NULL and YHZH != ''">YHZH,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			seq_jgdwb_id.nextval,
+			<if test="DWMC != NULL and DWMC != ''">#{DWMC},</if>
+			<if test="ZZJGDM != NULL and ZZJGDM != ''">#{ZZJGDM},</if>
+			<if test="DWXZ != NULL and DWXZ != ''">#{DWXZ},</if>
+			<if test="DWJFLY != NULL and DWJFLY != ''">#{DWJFLY},</if>
+			<if test="DWFRDM != NULL and DWFRDM != ''">#{DWFRDM},</if>
+			<if test="SSQX != NULL and SSQX != ''">#{SSQX},</if>
+			<if test="DWSZDZ != NULL and DWSZDZ != ''">#{DWSZDZ},</if>
+			<if test="YZBM != NULL and YZBM != ''">#{YZBM},</if>
+			<if test="ZGBM != NULL and ZGBM != ''">#{ZGBM},</if>
+			<if test="BZRS != NULL and BZRS != ''">#{BZRS},</if>
+			<if test="ZHMC != NULL and ZHMC != ''">#{ZHMC},</if>
+			<if test="KHYH != NULL and KHYH != ''">#{KHYH},</if>
+			<if test="YHZH != NULL and YHZH != ''">#{YHZH},</if>
+        </trim>
+	<![CDATA[ ) ]]>     
+</insert>
+<update id="update" parameterType="Map">
+	update jgdwb
+	<set>
+		<if test="DWMC != NULL">dwmc=#{DWMC},</if>
+		<if test="ZZJGDM != NULL">zzjgdm=#{ZZJGDM},</if>
+		<if test="DWXZ != NULL">dwxz=#{DWXZ},</if>
+		<if test="DWJFLY != NULL">dwjfly=#{DWJFLY},</if>
+		<if test="DWFRDM != NULL">dwfrdm=#{DWFRDM},</if>
+		<if test="SSQX != NULL">ssqx=#{SSQX},</if>
+		<if test="DWSZDZ != NULL">dwszdz=#{DWSZDZ},</if>
+		<if test="YZBM != NULL">yzbm=#{YZBM},</if>
+		<if test="ZGBM != NULL">zgbm=#{ZGBM},</if>
+		<if test="BZRS != NULL">bzrs=#{BZRS},</if>
+		<if test="ZHMC != NULL">ZHMC=#{ZHMC},</if>
+		<if test="KHYH != NULL">KHYH=#{KHYH},</if>
+		<if test="YHZH != NULL">YHZH=#{YHZH},</if>
+	</set>
+	where id=#{ID}
+</update>
+<select id="getJgdwById" parameterType="String" resultType="Map">
+	select * from jgdwb where id = #{jgdwId}
+</select>
+<delete id="deleteJgdw" parameterType="String">
+	delete from jgdwb where id = #{jgdwId}
+</delete>
+</mapper>

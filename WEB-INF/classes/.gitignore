@@ -1,0 +1,5 @@
+/application-context.xml
+/com/
+/jdbc.properties
+/log4j.properties
+/mybatis-configuration.xml

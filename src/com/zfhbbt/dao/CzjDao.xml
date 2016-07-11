@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.zfhbbt.dao.CzjDao">
+<select id="queryZjhbpcPage" parameterType="Map" resultType="Map">
+	select t.* from czj_zjhbpcb t
+	<where>
+		<if test="PC != null and PC != ''">
+			and t.PC like '%${PC}%' 
+		</if>
+		<if test="HBZT != null and HBZT != ''">
+			and t.HBZT = #{HBZT} 
+		</if>
+	</where>
+	order by t.czsj desc
+</select>
+<select id="queryZjhbpcPageCount" parameterType="Map" resultType="int">
+	select count(1) from czj_zjhbpcb t
+	<where>
+		<if test="PC != null and PC != ''">
+			and t.PC like '%${PC}%' 
+		</if>
+		<if test="HBZT != null and HBZT != ''">
+			and t.HBZT = #{HBZT} 
+		</if>
+	</where>
+</select>
+<select id="getZjbkpcbNextId" resultType="String">
+	select SEQ_CZJ_ZJHBPCB_ID.nextval from dual
+</select>
+<insert id="insertZjbkpcb" parameterType="Map">
+	insert into czj_zjhbpcb(
+		<trim prefix=""  suffixOverrides=",">
+			ID, XZSJ, CZSJ,
+			<if test="suserId != null and suserId != ''">XZR, CZR,</if>
+			<if test="HBJE != null and HBJE != ''">HBJE,</if>
+			<if test="BZ != null and BZ != ''">BZ,</if>
+			<if test="PC != null and PC != ''">PC,</if>
+			<if test="HBMXS != null and HBMXS != ''">HBMXS,</if>
+			<if test="HBRQ != null and HBRQ != ''">HBRQ,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			#{ID}, sysdate, sysdate,
+			<if test="suserId != null and suserId != ''">#{suserId}, #{suserId},</if>
+			<if test="HBJE != null and HBJE != ''">#{HBJE},</if>
+			<if test="BZ != null and BZ != ''">#{BZ},</if>
+			<if test="PC != null and PC != ''">#{PC},</if>
+			<if test="HBMXS != null and HBMXS != ''">#{HBMXS},</if>
+			<if test="HBRQ != null and HBRQ != ''">#{HBRQ},</if>
+        </trim>
+	<![CDATA[ ) ]]>  
+</insert>
+<update id="updateZjhbpc" parameterType="Map">
+	update CZJ_ZJHBPCB
+	<set>
+		CZSJ=sysdate,
+		<if test="HBJE != NULL">HBJE=#{HBJE},</if>
+		<if test="HBZT != NULL">HBZT=#{HBZT}, QRSJ=sysdate,</if>
+		<if test="BZ != NULL">BZ=#{BZ},</if>
+		<if test="PC != NULL">PC=#{PC},</if>
+		<if test="HBMXS != NULL">HBMXS=#{HBMXS},</if>
+		<if test="HBRQ != NULL">HBRQ=#{HBRQ},</if>
+		<if test="suserId != NULL">CZR=#{suserId},</if>
+	</set>
+	where id=#{ID}
+</update>
+<update id="cancelZjhbpcMx" parameterType="String">
+	update sb_dwsbxxb set ZJHBPC_ID = null, SCPCSJ = null where id=#{_parameter}
+</update>
+<select id="getZjhbpcmxList" parameterType="Map" resultType="Map">
+	select t.*, q.* from sb_dwsbxxb t left join sb_dwsbqkb q on t.id = q.dwsbid where t.zjhbpc_id = #{pcId} order by t.scpcsj desc
+</select>
+<select id="getZjhbListByIds" parameterType="Map" resultType="Map">
+	select t.*, q.* from sb_dwsbxxb t left join sb_dwsbqkb q on t.id = q.dwsbid where t.id in (${ids})
+</select>
+<select id="getZjhbpcById" parameterType="String" resultType="Map">
+	select * from CZJ_ZJHBPCB t where t.id = #{_parameter}
+</select>
+<update id="zjhbpcCancel" parameterType="String">
+update sb_dwsbxxb set ZJHBPC_ID = null, SCPCSJ = null where ZJHBPC_ID=#{_parameter}
+</update>
+<delete id="deleteZjhbpc" parameterType="String">
+delete CZJ_ZJHBPCB where id=#{_parameter}
+</delete>
+<update id="updatePcJeAndMxs" parameterType="Map">
+	update czj_zjhbpcb t set (t.hbje, t.hbmxs) = (select sum(s.bkje), count(1) from sb_dwsbxxb s where s.zjhbpc_id = #{ZJHBPC_ID}) where t.id = #{ZJHBPC_ID}
+</update>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zfhbbt.dao.ZwzjDao">
+<select id="queryPageCount" parameterType="Map" resultType="int">
+	select count(1) from zwzjb
+	<where>
+		<if test="zw != null and zw != ''">
+			and zw like '%${zw}%'
+		</if>
+		<if test="zwlb != null and zwlb != ''">
+			and zwlb = #{zwlb}
+		</if>
+	</where>
+</select>
+<select id="queryPage" parameterType="Map" resultType="Map">
+	select * from zwzjb
+	<where>
+		<if test="zw != null and zw != ''">
+			and zw like '%${zw}%'
+		</if>
+		<if test="zwlb != null and zwlb != ''">
+			and zwlb = #{zwlb}
+		</if>
+	</where>
+	<if test="sidx == null or sidx == ''">
+		order by zwlb, xzzj asc
+	</if>
+	<if test="sidx != null and sidx != ''">
+		order by ${sidx} ${sord}
+	</if>	
+</select>
+<insert id="insert" parameterType="Map">
+	insert into zwzjb(
+		<trim prefix=""  suffixOverrides=",">
+			id,
+			<if test="ZW != NULL and ZW != ''">ZW,</if>
+			<if test="ZWLB != NULL and ZWLB != ''">ZWLB,</if>
+			<if test="XZZJ != NULL and XZZJ != ''">XZZJ,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			seq_zwzjb_id.nextval,
+			<if test="ZW != NULL and ZW != ''">#{ZW},</if>
+			<if test="ZWLB != NULL and ZWLB != ''">#{ZWLB},</if>
+			<if test="XZZJ != NULL and XZZJ != ''">#{XZZJ},</if>
+        </trim>
+	<![CDATA[ ) ]]>     
+</insert>
+<update id="update" parameterType="Map">
+	update zwzjb
+	<set>
+		<if test="ZW != NULL">ZW=#{ZW},</if>
+		<if test="ZWLB != NULL">ZWLB=#{ZWLB},</if>
+		<if test="XZZJ != NULL">XZZJ=#{XZZJ},</if>
+	</set>
+	where id=#{ID}
+</update>
+<select id="getZwzjById" parameterType="String" resultType="Map">
+	select * from zwzjb where id = #{zwzjId}
+</select>
+<delete id="deleteZwzj" parameterType="String">
+	delete from zwzjb where id = #{zwzjId}
+</delete>
+<select id="getZwzjByZw" parameterType="String" resultType="Map">
+	select t.*, s.text xzzjmc from zwzjb t join standards s on t.xzzj = s.value and s.type = 'xzzj' where t.zw = #{zw}
+</select>
+</mapper>

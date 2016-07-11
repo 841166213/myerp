@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.zfhbbt.dao.FgbDao">
+<select id="queryFgbVerifyPage" parameterType="Map" resultType="Map">
+<![CDATA[	select t.*,
+       q.shzt_fgb_sbqk,
+       q.bnd_hj_rs sbrs,
+       q.BND_HJ_RS,
+       q.BND_HJ_JE,
+       q.BND_QE_RS,
+       q.BND_QE_JE,
+       q.BND_CE_RS,
+       q.BND_CE_JE,
+       (select count(1) from sb_rysbxxb r where r.DWSBID = t.id and r.shzt_ryxx <> '0') ysh_ryxx,
+       (select count(1) from sb_rysbxxb r where r.DWSBID = t.id and r.shzt_ryxx = '2') btg_ryxx,
+       (select count(1) from sb_rysbxxb r where r.DWSBID = t.id and r.shzt_sbxx <> '0') ysh_sbxx,
+       (select count(1) from sb_rysbxxb r where r.DWSBID = t.id and r.shzt_sbxx = '2') btg_sbxx
+  from sb_dwsbxxb t
+  join sb_dwsbqkb q
+    on t.id = q.dwsbid
+  where t.SHZT_BWB = '1'  ]]> 
+		<if test="SBDW != null and SBDW != ''">
+			and t.DWID = #{SBDW} 
+		</if>
+		<if test="SBND != null and SBND != ''">
+			and t.SBND = #{SBND} 
+		</if>
+		<if test="SHZT_FGB != null and SHZT_FGB != ''">
+			and t.SHZT_FGB = #{SHZT_FGB} 
+		</if>
+	<if test="sidx == null or sidx == ''">
+		order by t.TJSJ desc
+	</if>
+	<if test="sidx != null and sidx != ''">
+		order by ${sidx} ${sord}
+	</if>	
+</select>
+<select id="queryFgbVerifyPageCount" parameterType="Map" resultType="int">
+	select count(1)
+  from sb_dwsbxxb t
+  join sb_dwsbqkb q
+    on t.id = q.dwsbid
+  where t.SHZT_BWB = '1'
+		<if test="SBDW != null and SBDW != ''">
+			and t.DWID = #{SBDW} 
+		</if>
+		<if test="SBND != null and SBND != ''">
+			and t.SBND = #{SBND} 
+		</if>
+		<if test="SHZT_FGB != null and SHZT_FGB != ''">
+			and t.SHZT_FGB = #{SHZT_FGB} 
+		</if>
+</select>
+<update id="submitVerify" parameterType="String">
+	update sb_dwsbxxb set shzt_fgb=1 where id=#{id}
+</update>
+<select id="getRysbxxListByIds" parameterType="Map" resultType="Map">
+	select t.* from sb_rysbxxb t where t.id in (${ids})
+</select>
+</mapper>

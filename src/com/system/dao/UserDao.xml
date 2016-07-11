@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.system.dao.UserDao">
+	<select id="queryUserPage" parameterType="Map" resultType="Map">
+		SELECT
+			u.*, (
+				SELECT
+					wm_concat(r.ROLENAME)
+				FROM
+					user_role ur,
+					role r
+				WHERE
+					ur.ROLE_ID = r.id
+				AND ur.USER_ID = u.id
+			) AS USERROLE
+		FROM
+			userb u
+		<where>
+			 <if test="ACCOUNT != null and  ACCOUNT != ''">
+				and u.ACCOUNT like '%${ACCOUNT}%'
+			 </if>
+			 <if test="ROLE != null and  ROLE != ''">
+				and exists (select 1 from user_role ur where ur.user_id = u.id and ur.role_id = #{ROLE})
+			 </if>
+		</where>
+		
+		<if test="sidx == null or sidx == ''">
+			order by u.id desc
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} ${sord}
+		</if>
+	</select>
+	<select id="queryUserPageCount" parameterType="Map" resultType="int">
+		select count(1) from userb u
+		<where>
+			 <if test="ACCOUNT != null and  ACCOUNT != ''">
+				and u.ACCOUNT like '%${ACCOUNT}%'
+			 </if>
+			 <if test="ROLE != null and  ROLE != ''">
+				and exists (select 1 from user_role ur where ur.user_id = u.id and ur.role_id = #{ROLE})
+			 </if>
+		</where>
+	</select>
+	
+	<select id="getUser" parameterType="String" resultType="Map">
+		select * from userb where id = #{id}
+		
+	</select>
+	<select id="getUserByAccount" parameterType="String" resultType="Map">
+		select * from userb where account = #{account}
+		
+	</select>
+	
+	<select id="getUserRole" parameterType="String" resultType="Map">
+		SELECT
+			r.*, 
+		 IF(ur.roleId is null,false, TRUE) as checked
+		FROM
+			role r
+		LEFT JOIN user_role ur ON r.id = ur.roleId
+		AND ur.userId = #{userId}
+	</select>
+	<update id="update" parameterType="Map">
+		 update userb
+	      <set>  
+	        <if test="ACCOUNT != NULL">ACCOUNT = #{ACCOUNT},</if>
+			<if test="PASSWORD != NULL">PASSWORD = #{PASSWORD},</if>
+		  </set>
+		   WHERE ID = #{ID}     
+	</update>
+	
+	<insert id="insert" parameterType="Map">
+		 insert into userb(
+	      <trim prefix=""  suffixOverrides=",">
+				id,
+				<if test="ACCOUNT != NULL">ACCOUNT,</if>
+				<if test="PASSWORD != NULL">PASSWORD,</if>
+           </trim>
+	    <![CDATA[ ) values( ]]> 
+	       <trim prefix=""  suffixOverrides=",">
+				seq_userb_id.nextval,
+				<if test="ACCOUNT != NULL">#{ACCOUNT},</if>
+				<if test="PASSWORD != NULL">#{PASSWORD},</if>
+            </trim>
+	    <![CDATA[ ) ]]>     
+	</insert>
+	
+	
+	<insert id="insertUserRole" parameterType="Map">
+		 insert into USER_ROLE(
+	      <trim prefix=""  suffixOverrides=",">
+				<if test="USER_ID != null">USER_ID,</if>
+				<if test="ROLE_ID != null">ROLE_ID,</if>
+           </trim>
+	    <![CDATA[ ) values( ]]> 
+	       <trim prefix=""  suffixOverrides=",">
+				<if test="USER_ID != null">#{USER_ID},</if>
+				<if test="ROLE_ID != null">#{ROLE_ID},</if>
+            </trim>
+	    <![CDATA[ ) ]]>     
+	</insert>
+	
+	<delete id="deleteUserRole" parameterType="String">
+		delete from user_role where USER_ID = #{userId}
+	</delete>
+	<delete id="deleteUser" parameterType="String">
+		delete from userb where id = #{userId}
+	</delete>
+	
+	<select id="getUserRoles" parameterType="String" resultType="Map">
+		select r.rolename, r.id roleId, ur.* from role r left join user_role ur on r.id = ur.role_id and ur.user_id = #{_parameter}
+	</select>
+	<select id="getUserByAccountPs" parameterType="Map" resultType="com.system.model.SessionUser">
+		select * from userb where account=#{ACCOUNT} and password=#{PASSWORD}
+	</select>
+</mapper>

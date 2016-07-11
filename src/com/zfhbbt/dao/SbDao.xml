@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.zfhbbt.dao.SbDao">
+<select id="getDwsbById" parameterType="String" resultType="Map">
+	select t.*, q.* from sb_dwsbxxb t left join sb_dwsbqkb q on t.id = q.dwsbid where t.id = #{_parameter}
+</select>
+<select id="queryDwsbPage" parameterType="Map" resultType="Map">
+	select t.*, q.* from sb_dwsbxxb t left join sb_dwsbqkb q on t.id = q.dwsbid
+	<where>
+		<if test="SBDW != null and SBDW != ''">
+			and t.DWID = #{SBDW} 
+		</if>
+		<if test="SBND != null and SBND != ''">
+			and t.SBND = #{SBND} 
+		</if>
+		<if test="ZT != null and ZT != ''">
+			and t.ZT = #{ZT} 
+		</if>
+		<if test="SHZT_BWB != null and SHZT_BWB != ''">
+			and t.SHZT_BWB = #{SHZT_BWB} 
+		</if>
+		<if test="SHZT_FGB != null and SHZT_FGB != ''">
+			and t.SHZT_FGB = #{SHZT_FGB} 
+		</if>
+		<if test="SHZT_CZJ != null and SHZT_CZJ != ''">
+			and t.SHZT_CZJ = #{SHZT_CZJ} 
+		</if>
+		<if test="ZJHBPC_NOT_NUll != null">
+			and t.ZJHBPC_ID is not null
+		</if>
+		<if test="ZJHBPC_NUll != null">
+			and t.ZJHBPC_ID is null
+		</if>
+	</where>
+	<if test="sidx == null or sidx == ''">
+		order by t.XZSJ desc
+	</if>
+	<if test="sidx != null and sidx != ''">
+		order by ${sidx} ${sord}
+	</if>	
+</select>
+<select id="queryDwsbPageCount" parameterType="Map" resultType="int">
+	select count(1) from sb_dwsbxxb t
+	<where>
+		<if test="SBDW != null and SBDW != ''">
+			and t.DWID = #{SBDW} 
+		</if>
+		<if test="SBND != null and SBND != ''">
+			and t.SBND = #{SBND} 
+		</if>
+		<if test="ZT != null and ZT != ''">
+			and t.ZT = #{ZT} 
+		</if>
+		<if test="SHZT_BWB != null and SHZT_BWB != ''">
+			and t.SHZT_BWB = #{SHZT_BWB} 
+		</if>
+		<if test="SHZT_FGB != null and SHZT_FGB != ''">
+			and t.SHZT_FGB = #{SHZT_FGB} 
+		</if>
+		<if test="SHZT_CZJ != null and SHZT_CZJ != ''">
+			and t.SHZT_CZJ = #{SHZT_CZJ} 
+		</if>
+		<if test="ZJHBPC_NOT_NUll != null">
+			and t.ZJHBPC_ID is not null
+		</if>
+		<if test="ZJHBPC_NUll != null">
+			and t.ZJHBPC_ID is null
+		</if>
+	</where>
+</select>
+<select id="queryRysbxxPage" parameterType="Map" resultType="Map">
+	select t.*, d.sbnd, d.dwid from sb_rysbxxb t left join sb_dwsbxxb d on t.dwsbid = d.id
+	<where>
+		<if test="DWSBID != null and DWSBID != ''">
+			and t.DWSBID = #{DWSBID} 
+		</if>
+		<if test="SBLX != null and SBLX != ''">
+			and t.SBLX = #{SBLX} 
+		</if>
+		<if test="XM != null and XM != ''">
+			and t.XM like '%${XM}%' 
+		</if>
+		<if test="SFZHM != null and SFZHM != ''">
+			and t.SFZHM like '%${SFZHM}%' 
+		</if>
+		<if test="JZQK != null and JZQK != ''">
+			and t.JZQK = #{JZQK} 
+		</if>
+		<if test="SHZT_RYXX != null and SHZT_RYXX != ''">
+			and t.SHZT_RYXX = #{SHZT_RYXX} 
+		</if>
+		<if test="SHZT_SBXX != null and SHZT_SBXX != ''">
+			and t.SHZT_SBXX = #{SHZT_SBXX} 
+		</if>
+		<if test="SBDW != null and SBDW != ''">
+			and d.dwid = #{SBDW} 
+		</if>
+		<if test="SBND != null and SBND != ''">
+			and d.sbnd = #{SBND} 
+		</if>
+	</where>
+	<if test="sidx == null or sidx == ''">
+		order by t.sfzhm, t.sblx asc, d.sbnd desc
+	</if>
+	<if test="sidx != null and sidx != ''">
+		order by ${sidx} ${sord}
+	</if>	
+</select>
+<select id="queryRysbxxPageCount" parameterType="Map" resultType="int">
+	select count(1) from sb_rysbxxb t
+	<where>
+		<if test="DWSBID != null and DWSBID != ''">
+			and t.DWSBID = #{DWSBID} 
+		</if>
+		<if test="SBLX != null and SBLX != ''">
+			and t.SBLX = #{SBLX} 
+		</if>
+		<if test="XM != null and XM != ''">
+			and t.XM like '%${XM}%' 
+		</if>
+		<if test="SFZHM != null and SFZHM != ''">
+			and t.SFZHM like '%${SFZHM}%' 
+		</if>
+		<if test="JZQK != null and JZQK != ''">
+			and t.JZQK = #{JZQK} 
+		</if>
+		<if test="SHZT_RYXX != null and SHZT_RYXX != ''">
+			and t.SHZT_RYXX = #{SHZT_RYXX} 
+		</if>
+		<if test="SHZT_SBXX != null and SHZT_SBXX != ''">
+			and t.SHZT_SBXX = #{SHZT_SBXX} 
+		</if>
+	</where>
+</select>
+<select id="queryDwqesbPage" parameterType="Map" resultType="Map">
+	select t.* from sb_rysbxxb t where t.DWSBID = #{DWSBID} and sblx = '1'
+		<if test="XM != null and XM != ''">
+			and t.XM like '%${XM}%' 
+		</if>
+		<if test="SFZHM != null and SFZHM != ''">
+			and t.SFZHM like '%${SFZHM}%' 
+		</if>
+		<if test="JZQK != null and JZQK != ''">
+			and t.JZQK = #{JZQK} 
+		</if>
+</select>
+<select id="queryDwqesbPageCount" parameterType="Map" resultType="int">
+	select count(1) from sb_rysbxxb t where t.DWSBID = #{DWSBID} and sblx = '1'
+		<if test="XM != null and XM != ''">
+			and t.XM like '%${XM}%' 
+		</if>
+		<if test="SFZHM != null and SFZHM != ''">
+			and t.SFZHM like '%${SFZHM}%' 
+		</if>
+		<if test="JZQK != null and JZQK != ''">
+			and t.JZQK = #{JZQK} 
+		</if>
+</select>
+<select id="queryDwcesbPage" parameterType="Map" resultType="Map">
+	select t.* from sb_rysbxxb t where t.DWSBID = #{DWSBID} and sblx = '2'
+		<if test="XM != null and XM != ''">
+			and t.XM like '%${XM}%' 
+		</if>
+		<if test="SFZHM != null and SFZHM != ''">
+			and t.SFZHM like '%${SFZHM}%' 
+		</if>
+		<if test="JZQK != null and JZQK != ''">
+			and t.JZQK = #{JZQK} 
+		</if>
+</select>
+<select id="queryDwcesbPageCount" parameterType="Map" resultType="int">
+	select count(1) from sb_rysbxxb t where t.DWSBID = #{DWSBID} and sblx = '2'
+		<if test="XM != null and XM != ''">
+			and t.XM like '%${XM}%' 
+		</if>
+		<if test="SFZHM != null and SFZHM != ''">
+			and t.SFZHM like '%${SFZHM}%' 
+		</if>
+		<if test="JZQK != null and JZQK != ''">
+			and t.JZQK = #{JZQK} 
+		</if>
+</select>
+<select id="getRysbxx" parameterType="String" resultType="Map">
+	select * from sb_rysbxxb t where t.id = #{_parameter}
+</select>
+<insert id="insertDwsbxx" parameterType="Map">
+	insert into sb_dwsbxxb(
+		<trim prefix=""  suffixOverrides=",">
+			id, XZSJ, CZSJ,
+			<if test="DWID != NULL and DWID != ''">DWID,</if>
+			<if test="SBND != NULL and SBND != ''">SBND,</if>
+			<if test="suserId != NULL and suserId != ''">XZR, CZR,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			SEQ_SB_DWSBXXB_ID.nextval, sysdate, sysdate,
+			<if test="DWID != NULL and DWID != ''">#{DWID},</if>
+			<if test="SBND != NULL and SBND != ''">#{SBND},</if>
+			<if test="suserId != NULL and suserId != ''">#{suserId}, #{suserId},</if>
+        </trim>
+	<![CDATA[ ) ]]>    
+</insert>
+<insert id="insertRysbxx" parameterType="Map">
+	insert into sb_rysbxxb(
+		<trim prefix=""  suffixOverrides=",">
+			id, DWSBID,  XZSJ, CZSJ,
+			<if test="SBLX != NULL and SBLX != ''">SBLX,</if>
+			<if test="XM != NULL and XM != ''">XM,</if>
+			<if test="SFZHM != NULL and SFZHM != ''">SFZHM,</if>
+			<if test="ZZZT != NULL and ZZZT != ''">ZZZT,</if>
+			<if test="ZW != NULL and ZW != ''">ZW,</if>
+			<if test="JZQK != NULL and JZQK != ''">JZQK,</if>
+			<if test="XJZFWDZ != NULL and XJZFWDZ != ''">XJZFWDZ,</if>
+			<if test="YLQNS != NULL and YLQNS != ''">YLQNS,</if>
+			<if test="SNDYFFBZ != NULL and SNDYFFBZ != ''">SNDYFFBZ,</if>
+			<if test="BNDYFFBZ != NULL and BNDYFFBZ != ''">BNDYFFBZ,</if>
+			<if test="LQFS != NULL and LQFS != ''">LQFS,</if>
+			<if test="FFEHJ != NULL and FFEHJ != ''">FFEHJ,</if>
+			<if test="POXM != NULL and POXM != ''">POXM,</if>
+			<if test="POSFZHM != NULL and POSFZHM != ''">POSFZHM,</if>
+			<if test="FGMJ != NULL and FGMJ != ''">FGMJ,</if>
+			<if test="CEHBBTZE != NULL and CEHBBTZE != ''">CEHBBTZE,</if>
+			<if test="FWSZDZ != NULL and FWSZDZ != ''">FWSZDZ,</if>
+			<if test="GL != NULL and GL != ''">GL,</if>
+			<if test="XZZJ != NULL and XZZJ != ''">XZZJ,</if>
+			<if test="BPJSZW != NULL and BPJSZW != ''">BPJSZW,</if>
+			<if test="BTBZ != NULL and BTBZ != ''">BTBZ,</if>
+			<if test="BTJE != NULL and BTJE != ''">BTJE,</if>
+			<if test="XGZDW != NULL and XGZDW != ''">XGZDW,</if>
+			<if test="POGL != NULL and POGL != ''">POGL,</if>
+			<if test="POBPJSZW != NULL and POBPJSZW != ''">POBPJSZW,</if>
+			<if test="POBTBZ != NULL and POBTBZ != ''">POBTBZ,</if>
+			<if test="POBTJE != NULL and POBTJE != ''">POBTJE,</if>
+			<if test="POXGZDW != NULL and POXGZDW != ''">POXGZDW,</if>
+			<if test="SQLY != NULL and SQLY != ''">SQLY,</if>
+			<if test="CJGZSJ != NULL and CJGZSJ != ''">CJGZSJ,</if>
+			<if test="JRJGSYDWGZSJ != NULL and JRJGSYDWGZSJ != ''">JRJGSYDWGZSJ,</if>
+			<if test="KSLQSJ != NULL and KSLQSJ != ''">KSLQSJ,</if>
+			<if test="suserId != NULL and suserId != ''">XZR, CZR,</if>
+        </trim>
+	<![CDATA[ ) values( ]]> 
+	    <trim prefix=""  suffixOverrides=",">
+			SEQ_SB_RYSBQKB_ID.nextval, #{DWSBID}, sysdate, sysdate,
+			<if test="SBLX != NULL and SBLX != ''">#{SBLX},</if>
+			<if test="XM != NULL and XM != ''">#{XM},</if>
+			<if test="SFZHM != NULL and SFZHM != ''">#{SFZHM},</if>
+			<if test="ZZZT != NULL and ZZZT != ''">#{ZZZT},</if>
+			<if test="ZW != NULL and ZW != ''">#{ZW},</if>
+			<if test="JZQK != NULL and JZQK != ''">#{JZQK},</if>
+			<if test="XJZFWDZ != NULL and XJZFWDZ != ''">#{XJZFWDZ},</if>
+			<if test="YLQNS != NULL and YLQNS != ''">#{YLQNS},</if>
+			<if test="SNDYFFBZ != NULL and SNDYFFBZ != ''">#{SNDYFFBZ},</if>
+			<if test="BNDYFFBZ != NULL and BNDYFFBZ != ''">#{BNDYFFBZ},</if>
+			<if test="LQFS != NULL and LQFS != ''">#{LQFS},</if>
+			<if test="FFEHJ != NULL and FFEHJ != ''">#{FFEHJ},</if>
+			<if test="POXM != NULL and POXM != ''">#{POXM},</if>
+			<if test="POSFZHM != NULL and POSFZHM != ''">#{POSFZHM},</if>
+			<if test="FGMJ != NULL and FGMJ != ''">#{FGMJ},</if>
+			<if test="CEHBBTZE != NULL and CEHBBTZE != ''">#{CEHBBTZE},</if>
+			<if test="FWSZDZ != NULL and FWSZDZ != ''">#{FWSZDZ},</if>
+			<if test="GL != NULL and GL != ''">#{GL},</if>
+			<if test="XZZJ != NULL and XZZJ != ''">#{XZZJ},</if>
+			<if test="BPJSZW != NULL and BPJSZW != ''">#{BPJSZW},</if>
+			<if test="BTBZ != NULL and BTBZ != ''">#{BTBZ},</if>
+			<if test="BTJE != NULL and BTJE != ''">#{BTJE},</if>
+			<if test="XGZDW != NULL and XGZDW != ''">#{XGZDW},</if>
+			<if test="POGL != NULL and POGL != ''">#{POGL},</if>
+			<if test="POBPJSZW != NULL and POBPJSZW != ''">#{POBPJSZW},</if>
+			<if test="POBTBZ != NULL and POBTBZ != ''">#{POBTBZ},</if>
+			<if test="POBTJE != NULL and POBTJE != ''">#{POBTJE},</if>
+			<if test="POXGZDW != NULL and POXGZDW != ''">#{POXGZDW},</if>
+			<if test="SQLY != NULL and SQLY != ''">#{SQLY},</if>
+			<if test="CJGZSJ != NULL and CJGZSJ != ''">to_date(#{CJGZSJ}, 'yyyy-mm-dd'),</if>
+			<if test="JRJGSYDWGZSJ != NULL and JRJGSYDWGZSJ != ''">to_date(#{JRJGSYDWGZSJ}, 'yyyy-mm-dd'),</if>
+			<if test="KSLQSJ != NULL and KSLQSJ != ''">to_date(#{KSLQSJ}, 'yyyy-mm-dd'),</if>
+			<if test="suserId != NULL and suserId != ''">#{suserId}, #{suserId},</if>
+        </trim>
+	<![CDATA[ ) ]]>    
+</insert>
+<update id="updateRysbxx" parameterType="Map">
+	update sb_rysbxxb
+	<set>
+		CZSJ=sysdate,
+		<if test="SBLX != NULL">SBLX=#{SBLX},</if>
+		<if test="XM != NULL">XM=#{XM},</if>
+		<if test="SFZHM != NULL">SFZHM=#{SFZHM},</if>
+		<if test="ZZZT != NULL">ZZZT=#{ZZZT},</if>
+		<if test="CJGZSJ != NULL">CJGZSJ=to_date(#{CJGZSJ}, 'yyyy-mm-dd'),</if>
+		<if test="JRJGSYDWGZSJ != NULL">JRJGSYDWGZSJ=to_date(#{JRJGSYDWGZSJ}, 'yyyy-mm-dd'),</if>
+		<if test="ZW != NULL">ZW=#{ZW},</if>
+		<if test="JZQK != NULL">JZQK=#{JZQK},</if>
+		<if test="XJZFWDZ != NULL">XJZFWDZ=#{XJZFWDZ},</if>
+		<if test="KSLQSJ != NULL">KSLQSJ=to_date(#{KSLQSJ}, 'yyyy-mm-dd'),</if>
+		<if test="YLQNS != NULL">YLQNS=#{YLQNS},</if>
+		<if test="SNDYFFBZ != NULL">SNDYFFBZ=#{SNDYFFBZ},</if>
+		<if test="BNDYFFBZ != NULL">BNDYFFBZ=#{BNDYFFBZ},</if>
+		<if test="LQFS != NULL">LQFS=#{LQFS},</if>
+		<if test="FFEHJ != NULL">FFEHJ=#{FFEHJ},</if>
+		<if test="POXM != NULL">POXM=#{POXM},</if>
+		<if test="POSFZHM != NULL">POSFZHM=#{POSFZHM},</if>
+		<if test="FGMJ != NULL">FGMJ=#{FGMJ},</if>
+		<if test="CEHBBTZE != NULL">CEHBBTZE=#{CEHBBTZE},</if>
+		<if test="FWSZDZ != NULL">FWSZDZ=#{FWSZDZ},</if>
+		<if test="GL != NULL">GL=#{GL},</if>
+		<if test="XZZJ != NULL">XZZJ=#{XZZJ},</if>
+		<if test="BPJSZW != NULL">BPJSZW=#{BPJSZW},</if>
+		<if test="BTBZ != NULL">BTBZ=#{BTBZ},</if>
+		<if test="BTJE != NULL">BTJE=#{BTJE},</if>
+		<if test="XGZDW != NULL">XGZDW=#{XGZDW},</if>
+		<if test="POGL != NULL">POGL=#{POGL},</if>
+		<if test="POBPJSZW != NULL">POBPJSZW=#{POBPJSZW},</if>
+		<if test="POBTBZ != NULL">POBTBZ=#{POBTBZ},</if>
+		<if test="POBTJE != NULL">POBTJE=#{POBTJE},</if>
+		<if test="POXGZDW != NULL">POXGZDW=#{POXGZDW},</if>
+		<if test="SQLY != NULL">SQLY=#{SQLY},</if>
+		<if test="suserId != NULL">CZR=#{suserId},</if>
+		
+		<if test="SHZT_RYXX != NULL">SHZT_RYXX=#{SHZT_RYXX}, SHSJ_RYXX = sysdate,</if>
+		<if test="SHYJ_RYXX != NULL">SHYJ_RYXX=#{SHYJ_RYXX},</if>
+		<if test="SHZT_SBXX != NULL">SHZT_SBXX=#{SHZT_SBXX}, SHSJ_SBXX = sysdate,</if>
+		<if test="SHYJ_SBXX != NULL">SHYJ_SBXX=#{SHYJ_SBXX},</if>
+	</set>
+	where id=#{ID}
+</update>
+<delete id="deleteRysbxx" parameterType="String">
+	delete sb_rysbxxb where id = #{_parameter}
+</delete>
+<select id="getDwsbqkById" parameterType="String" resultType="Map">
+	select t.*,s.*,j.dwmc,j.dwjfly from sb_dwsbqkb t
+	left join sb_dwsbxxb s on t.dwsbid=s.id
+	left join jgdwb j on s.dwid=j.id
+	where t.dwsbid = #{sbId}
+</select>
+<update id="updateDwsbqkb" parameterType="Map">
+	update sb_dwsbqkb
+	<set>
+		<if test="BND_HJ_RS != NULL">BND_HJ_RS=#{BND_HJ_RS},</if>
+		<if test="BND_HJ_JE != NULL">BND_HJ_JE=#{BND_HJ_JE},</if>
+		<if test="BND_QE_RS != NULL">BND_QE_RS=#{BND_QE_RS},</if>
+		<if test="BND_QE_JE != NULL">BND_QE_JE=#{BND_QE_JE},</if>
+		<if test="BND_QE_ZYGY_RS != NULL">BND_QE_ZYGY_RS=#{BND_QE_ZYGY_RS},</if>
+		<if test="BND_QE_ZYGY_JE != NULL">BND_QE_ZYGY_JE=#{BND_QE_ZYGY_JE},</if>
+		<if test="BND_QE_ZYQT_RS != NULL">BND_QE_ZYQT_RS=#{BND_QE_ZYQT_RS},</if>
+		<if test="BND_QE_ZYQT_JE != NULL">BND_QE_ZYQT_JE=#{BND_QE_ZYQT_JE},</if>
+		<if test="BND_QE_GMSP_RS != NULL">BND_QE_GMSP_RS=#{BND_QE_GMSP_RS},</if>
+		<if test="BND_QE_GMSP_JE != NULL">BND_QE_GMSP_JE=#{BND_QE_GMSP_JE},</if>
+		<if test="BND_QE_ZYSF_RS != NULL">BND_QE_ZYSF_RS=#{BND_QE_ZYSF_RS},</if>
+		<if test="BND_QE_ZYSF_JE != NULL">BND_QE_ZYSF_JE=#{BND_QE_ZYSF_JE},</if>
+		<if test="BND_CE_RS != NULL">BND_CE_RS=#{BND_CE_RS},</if>
+		<if test="BND_CE_JE != NULL">BND_CE_JE=#{BND_CE_JE},</if>
+		<if test="BND_BL_RS != NULL">BND_BL_RS=#{BND_BL_RS},</if>
+		<if test="BND_BL_YGGYDB_RS != NULL">BND_BL_YGGYDB_RS=#{BND_BL_YGGYDB_RS},</if>
+		<if test="BND_BL_YGBTDB_RS != NULL">BND_BL_YGBTDB_RS=#{BND_BL_YGBTDB_RS},</if>
+		<if test="BND_BL_YLZCE_RS != NULL">BND_BL_YLZCE_RS=#{BND_BL_YLZCE_RS},</if>
+		<if test="BND_BL_ZZGY_RS != NULL">BND_BL_ZZGY_RS=#{BND_BL_ZZGY_RS},</if>
+		<if test="BND_BL_ZZQT_RS != NULL">BND_BL_ZZQT_RS=#{BND_BL_ZZQT_RS},</if>
+		<if test="BND_BL_YLDWBZ_RS != NULL">BND_BL_YLDWBZ_RS=#{BND_BL_YLDWBZ_RS},</if>
+		<if test="SND_HJ_RS != NULL">SND_HJ_RS=#{SND_HJ_RS},</if>
+		<if test="SND_HJ_JE != NULL">SND_HJ_JE=#{SND_HJ_JE},</if>
+		<if test="SND_QE_RS != NULL">SND_QE_RS=#{SND_QE_RS},</if>
+		<if test="SND_QE_JE != NULL">SND_QE_JE=#{SND_QE_JE},</if>
+		<if test="SND_QE_ZYGY_RS != NULL">SND_QE_ZYGY_RS=#{SND_QE_ZYGY_RS},</if>
+		<if test="SND_QE_ZYGY_JE != NULL">SND_QE_ZYGY_JE=#{SND_QE_ZYGY_JE},</if>
+		<if test="SND_QE_ZYQT_RS != NULL">SND_QE_ZYQT_RS=#{SND_QE_ZYQT_RS},</if>
+		<if test="SND_QE_ZYQT_JE != NULL">SND_QE_ZYQT_JE=#{SND_QE_ZYQT_JE},</if>
+		<if test="SND_QE_GMSP_RS != NULL">SND_QE_GMSP_RS=#{SND_QE_GMSP_RS},</if>
+		<if test="SND_QE_GMSP_JE != NULL">SND_QE_GMSP_JE=#{SND_QE_GMSP_JE},</if>
+		<if test="SND_QE_ZYSF_RS != NULL">SND_QE_ZYSF_RS=#{SND_QE_ZYSF_RS},</if>
+		<if test="SND_QE_ZYSF_JE != NULL">SND_QE_ZYSF_JE=#{SND_QE_ZYSF_JE},</if>
+		<if test="SND_CE_RS != NULL">SND_CE_RS=#{SND_CE_RS},</if>
+		<if test="SND_CE_JE != NULL">SND_CE_JE=#{SND_CE_JE},</if>
+		<if test="SND_BL_RS != NULL">SND_BL_RS=#{SND_BL_RS},</if>
+		<if test="SND_BL_YGGYDB_RS != NULL">SND_BL_YGGYDB_RS=#{SND_BL_YGGYDB_RS},</if>
+		<if test="SND_BL_YGBTDB_RS != NULL">SND_BL_YGBTDB_RS=#{SND_BL_YGBTDB_RS},</if>
+		<if test="SND_BL_YLZCE_RS != NULL">SND_BL_YLZCE_RS=#{SND_BL_YLZCE_RS},</if>
+		<if test="SND_BL_ZZGY_RS != NULL">SND_BL_ZZGY_RS=#{SND_BL_ZZGY_RS},</if>
+		<if test="SND_BL_ZZQT_RS != NULL">SND_BL_ZZQT_RS=#{SND_BL_ZZQT_RS},</if>
+		<if test="SND_BL_YLDWBZ_RS != NULL">SND_BL_YLDWBZ_RS=#{SND_BL_YLDWBZ_RS},</if>
+		<if test="BZRS_HJ != NULL">BZRS_HJ=#{BZRS_HJ},</if>
+		<if test="BZRS_TJ != NULL">BZRS_TJ=#{BZRS_TJ},</if>
+		<if test="BZRS_CJ != NULL">BZRS_CJ=#{BZRS_CJ},</if>
+		<if test="BZRS_CJ_ZW != NULL">BZRS_CJ_ZW=#{BZRS_CJ_ZW},</if>
+		<if test="BZRS_CJ_GJZC != NULL">BZRS_CJ_GJZC=#{BZRS_CJ_GJZC},</if>
+		<if test="BZRS_KJ != NULL">BZRS_KJ=#{BZRS_KJ},</if>
+		<if test="BZRS_KJ_ZW != NULL">BZRS_KJ_ZW=#{BZRS_KJ_ZW},</if>
+		<if test="BZRS_KJ_ZJZC != NULL">BZRS_KJ_ZJZC=#{BZRS_KJ_ZJZC},</if>
+		<if test="BZRS_YBGB != NULL">BZRS_YBGB=#{BZRS_YBGB},</if>
+		<if test="SYRS_HJ != NULL">SYRS_HJ=#{SYRS_HJ},</if>
+		<if test="SYRS_TJ != NULL">SYRS_TJ=#{SYRS_TJ},</if>
+		<if test="SYRS_CJ != NULL">SYRS_CJ=#{SYRS_CJ},</if>
+		<if test="SYRS_CJ_ZW != NULL">SYRS_CJ_ZW=#{SYRS_CJ_ZW},</if>
+		<if test="SYRS_CJ_GJZC != NULL">SYRS_CJ_GJZC=#{SYRS_CJ_GJZC},</if>
+		<if test="SYRS_KJ != NULL">SYRS_KJ=#{SYRS_KJ},</if>
+		<if test="SYRS_KJ_ZW != NULL">SYRS_KJ_ZW=#{SYRS_KJ_ZW},</if>
+		<if test="SYRS_KJ_ZJZC != NULL">SYRS_KJ_ZJZC=#{SYRS_KJ_ZJZC},</if>
+		<if test="SYRS_YBGB != NULL">SYRS_YBGB=#{SYRS_YBGB},</if>
+		
+		<if test="SHZT_BWB_SBQK != NULL">SHZT_BWB_SBQK=#{SHZT_BWB_SBQK}, SHSJ_BWB_SBQK = sysdate,</if>
+		<if test="SHYJ_BWB_SBQK != NULL">SHYJ_BWB_SBQK=#{SHYJ_BWB_SBQK},</if>
+		<if test="SHZT_FGB_SBQK != NULL">SHZT_FGB_SBQK=#{SHZT_FGB_SBQK}, SHSJ_FGB_SBQK = sysdate,</if>
+		<if test="SHYJ_FGB_SBQK != NULL">SHYJ_FGB_SBQK=#{SHYJ_FGB_SBQK},</if>
+		<if test="SHYJ_FGB_SBQK != NULL">SHYJ_FGB_SBQK=#{SHYJ_FGB_SBQK},</if>
+	</set>
+	where dwsbid=#{DWSBID}
+</update>
+<select id="calBNDSbqk" resultType="Map">
+	select count(1) BND_HJ_RS,
+       nvl(sum(t.FFEHJ),0) BND_HJ_JE,
+       nvl(sum(decode(t.sblx, '1', 1, 0)),0) BND_QE_RS,
+       nvl(sum(decode(t.sblx, '1', t.FFEHJ, 0)),0) BND_QE_JE,
+       nvl(sum(case when t.sblx = '1' and (t.jzqk = '1' or t.jzqk = '2') then 1 else 0 end),0) BND_QE_ZYGY_RS,
+       nvl(sum(case when t.sblx = '1' and (t.jzqk = '1' or t.jzqk = '2') then t.FFEHJ else 0 end),0) BND_QE_ZYGY_JE,
+       nvl(sum(case when t.sblx = '1' and t.jzqk = '3' then 1 else 0 end),0) BND_QE_ZYQT_RS,
+       nvl(sum(case when t.sblx = '1' and t.jzqk = '3' then t.FFEHJ else 0 end),0) BND_QE_ZYQT_JE,
+       nvl(sum(case when t.sblx = '1' and t.jzqk = '4' then 1 else 0 end),0) BND_QE_GMSP_RS,
+       nvl(sum(case when t.sblx = '1' and t.jzqk = '4' then t.FFEHJ else 0 end),0) BND_QE_GMSP_JE,
+       nvl(sum(case when t.sblx = '1' and t.jzqk = '5' then 1 else 0 end),0) BND_QE_ZYSF_RS,
+       nvl(sum(case when t.sblx = '1' and t.jzqk = '5' then t.FFEHJ else 0 end),0) BND_QE_ZYSF_JE,
+       nvl(sum(decode(t.sblx, '2', 1, 0)),0) BND_CE_RS,
+       nvl(sum(decode(t.sblx, '2', t.FFEHJ, 0)),0) BND_CE_JE
+  	from sb_rysbxxb t
+ 	where t.DWSBID = #{dwsbid}
+</select>
+<update id="updateDwsbxxb" parameterType="Map">
+	update sb_dwsbxxb
+	<set>
+		CZSJ=sysdate,
+		<if test="suserId != NULL">CZR=#{suserId},</if>
+		<if test="ZT != NULL">ZT=#{ZT}, TJSJ=sysdate,</if>
+		<if test="SHZT_BWB != NULL">SHZT_BWB=#{SHZT_BWB}, SHSJ_BWB=sysdate,</if>
+		<if test="SHYJ_BWB != NULL">SHYJ_BWB=#{SHYJ_BWB},</if>
+		<if test="SHZT_CZJ != NULL">SHZT_CZJ=#{SHZT_CZJ}, SHSJ_CZJ=sysdate,</if>
+		<if test="SHYJ_CZJ != NULL">SHYJ_CZJ=#{SHYJ_CZJ},</if>
+		<if test="BKBL != NULL">BKBL=#{BKBL},</if>
+		<if test="BKJE != NULL">BKJE=#{BKJE},</if>
+		<if test="ZJHBPC_ID != NULL">ZJHBPC_ID=#{ZJHBPC_ID}, SCPCSJ=sysdate,</if>
+	</set>
+	where ID=#{ID}
+</update>
+<select id="queryRysbHistoryPage" parameterType="Map" resultType="Map">
+	select dw.dwid,dw.sbnd,ry.*
+	from sb_rysbxxb ry
+	left join sb_dwsbxxb dw on ry.DWSBID=dw.id
+	<where>
+		<if test="SFZHM != null and SFZHM != ''">
+			and ry.SFZHM = #{SFZHM} 
+		</if>
+		<if test="SBLX != null and SBLX != ''">
+			and ry.SBLX = #{SBLX} 
+		</if>
+		<if test="SHZT_RYXX != null and SHZT_RYXX != ''">
+			and ry.SHZT_RYXX = #{SHZT_RYXX} 
+		</if>
+		<if test="SHZT_SBXX != null and SHZT_SBXX != ''">
+			and ry.SHZT_SBXX = #{SHZT_SBXX} 
+		</if>
+	</where>
+	order by dw.dwid,dw.sbnd asc
+</select>
+<select id="queryRysbHistoryPageCount" parameterType="Map" resultType="int">
+	select count(1) from sb_rysbxxb ry
+	left join sb_dwsbxxb dw on ry.DWSBID=dw.id
+	<where>
+		<if test="SFZHM != null and SFZHM != ''">
+			and ry.SFZHM = #{SFZHM} 
+		</if>
+		<if test="SBLX != null and SBLX != ''">
+			and ry.SBLX = #{SBLX} 
+		</if>
+		<if test="SHZT_RYXX != null and SHZT_RYXX != ''">
+			and ry.SHZT_RYXX = #{SHZT_RYXX} 
+		</if>
+		<if test="SHZT_SBXX != null and SHZT_SBXX != ''">
+			and ry.SHZT_SBXX = #{SHZT_SBXX} 
+		</if>
+	</where>
+</select>
+<select id="getLastRysb" parameterType="Map" resultType="Map">
+	select * from sb_rysbxxb r
+	left join sb_dwsbxxb d on r.dwsbid = d.id
+	where d.sbnd = #{sbnd}-1 and r.sfzhm = #{sfzhm} and d.shzt_fgb = 1
+</select>
+<select id="getRysbxxList" resultType="Map">
+	select r.* from sb_rysbxxb r left join sb_dwsbxxb d on r.dwsbid = d.id
+	where r.dwsbid = #{dwsbid} and r.sblx = #{sblx}
+</select>
+<delete id="deleteRysbxxByDwsbId" parameterType="String">
+	delete SB_RYSBXXB where DWSBID = #{id}
+</delete>
+<delete id="deleteDwsbqk" parameterType="String">
+	delete SB_DWSBQKB where DWSBID = #{id}
+</delete>
+<delete id="deleteDwsbxx" parameterType="String">
+	delete SB_DWSBXXB where ID = #{id}
+</delete>
+</mapper>

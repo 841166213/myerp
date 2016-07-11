@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+<mapper namespace="com.system.dao.RoleDao">
+	<select id="queryPage" parameterType="Map" resultType="Map">
+		 SELECT r.*,
+       		(SELECT wm_concat(m.menuName)
+				  FROM role_menu rm, menu m
+				 WHERE rm.menuId = m.id
+				   AND rm.roleId = r.id) AS menus
+		 FROM role r
+		<where>
+			 <if test="roleName != null and  roleName != ''">
+				and r.roleName like '%${roleName}%'
+			 </if>
+			 <if test="menuName != null and  menuName != ''">
+				r.id in (SELECT DISTINCT rm.roleId from role_menu rm LEFT JOIN menu m on rm.menuId = m.id WHERE m.menuName LIKE '%${menuName}%')
+			 </if>
+		</where>
+		
+		<if test="sidx == null or sidx == ''">
+			order by r.id desc
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} ${sord}
+		</if>
+		
+	</select>
+	<select id="queryPageCount" parameterType="Map" resultType="int">
+		select count(1) from role r
+		<where>
+			 <if test="roleName != null and  roleName != ''">
+				and r.roleName like '%${roleName}%'
+			 </if>
+			 <if test="menuName != null and  menuName != ''">
+				r.id in (SELECT DISTINCT rm.roleId from role_menu rm LEFT JOIN menu m on rm.menuId = m.id WHERE m.menuName LIKE '%${menuName}%')
+			 </if>
+		</where>
+	</select>
+	
+	<select id="get" parameterType="String" resultType="Map">
+		select * from role where id = #{id}
+		
+	</select>
+	<select id="getRoleById" parameterType="String" resultType="Map">
+		select * from role where id = #{id}
+	</select>
+	<select id="getRoleMenuEditTree" parameterType="String" resultType="Map">
+		select t.*, decode(rm.roleId, null, '', 'true') checked
+ 		 from menu t
+		  left join role_menu rm
+			on t.id = rm.menuId
+		   and rm.roleId = #{roleId}
+		order by t.seq asc
+	</select>
+	<select id="getRoleMenus" resultType="com.system.model.Menu">
+		SELECT
+			m.*, 
+		 decode(rm.roleId, null, 0, 1) as checked
+		FROM
+			menu m
+		LEFT JOIN role_menu rm ON m.id = rm.menuId
+		AND rm.roleId = #{roleId}
+		where m.parentId = #{menuId}
+	</select>
+	<update id="update" parameterType="Map">
+		 update role
+	      <set>  
+			<if test="ROLENAME != NULL">ROLENAME = #{ROLENAME},</if>
+		  </set>
+		   WHERE ID = #{ID}     
+	</update>
+	
+	<insert id="insert"  parameterType="Map">
+		 insert into role(
+	      <trim prefix=""  suffixOverrides=",">
+				id,
+				<if test="ROLENAME != NULL">ROLENAME,</if>
+           </trim>
+	    <![CDATA[ ) values( ]]> 
+	       <trim prefix=""  suffixOverrides=",">
+				seq_role_id.nextval,
+				<if test="ROLENAME != NULL">#{ROLENAME},</if>
+            </trim>
+	    <![CDATA[ ) ]]>     
+	</insert>
+	
+	<insert id="insertRoleMenu" parameterType="Map">
+		 insert into role_menu(
+	      <trim prefix=""  suffixOverrides=",">
+				<if test="roleId != null">roleId,</if>
+				<if test="menuId != null">menuId,</if>
+           </trim>
+	    <![CDATA[ ) values( ]]> 
+	       <trim prefix=""  suffixOverrides=",">
+				<if test="roleId != null">#{roleId},</if>
+				<if test="menuId != null">#{menuId},</if>
+            </trim>
+	    <![CDATA[ ) ]]>     
+	</insert>
+	
+	<delete id="deleteRoleMenu" parameterType="String">
+		delete from role_menu where roleId = #{roleId}
+	</delete>
+	<delete id="deleteRole" parameterType="String">
+		delete from role where id = #{roleId}
+	</delete>
+	
+	<select id="getRoles" resultType="Map">
+		select * from role
+	</select>
+</mapper>
